@@ -2,24 +2,43 @@
 
 ## Description
 
-The Filipino Cookbook API is a RESTful API developed using PHP, Slim Framework, and MySQL. It provides JSON data about Filipino foods, categories, ingredients, and food origins. This API is designed for educational purposes and demonstrates RESTful API development using the Slim Framework.
+The Filipino Cookbook API is a RESTful API developed using PHP, Slim Framework, and MySQL. It provides JSON data about Filipino foods, food categories, ingredients, and food origins. The API demonstrates RESTful web service development with token-based authentication and is intended for educational purposes.
+
+---
+
+## Repository Information
+
+**Repository Name**
+
+```
+filipino-cookbook-api-devillena
+```
+
+**Repository Description**
+
+A RESTful Filipino Cookbook API developed using PHP, Slim Framework, and MySQL for API Development laboratory activities.
 
 ---
 
 ## Features
 
-- Retrieve Filipino foods
-- Retrieve food categories
-- Retrieve food origins
-- Retrieve ingredients
-- Return JSON responses
+- Retrieve all Filipino foods
+- Retrieve a specific food by ID
+- Search foods by name
+- Retrieve all food categories
+- Retrieve all ingredients
+- Add a new food with ingredients
 - Token-based authentication
+- JSON responses
+- Category summary endpoint
+- Random Filipino food endpoint
+- Input validation for requests
 
 ---
 
 ## Technologies Used
 
-- PHP
+- PHP 8.x
 - Slim Framework
 - MySQL
 - Composer
@@ -29,50 +48,106 @@ The Filipino Cookbook API is a RESTful API developed using PHP, Slim Framework, 
 
 ---
 
-## Requirements
+## Repository Contents
 
-Before running the project, make sure you have:
+This repository contains:
 
-- PHP 8.x
-- Composer
-- MySQL
-- XAMPP (Apache and MySQL)
+- Complete Filipino Cookbook API source code
+- SQL database file (`filipino_cookbook_api.sql`)
+- `composer.json`
+- `composer.lock`
+- API routes
+- Database connection files
+- Authentication and security files
+- Configuration instructions
+- `.gitignore`
+- `README.md`
 
 ---
 
-## Installation
+## Project Structure
 
-1. Clone the repository:
+```text
+filipino-cookbook-api-devillena/
+│── public/
+│   ├── index.php
+│   └── .htaccess
+│── vendor/
+│── composer.json
+│── composer.lock
+│── filipino_cookbook_api.sql
+│── config.example.php
+│── README.md
+│── .gitignore
+```
+
+> **Note:** The `vendor` folder should not be uploaded to GitHub. Run `composer install` after cloning the repository.
+
+---
+
+# Installation Guide
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/airyl101/filipino-cookbook-api-devillena.git
 ```
 
-2. Go to the project directory:
+### 2. Open the project folder
 
 ```bash
 cd filipino-cookbook-api-devillena
 ```
 
-3. Install Composer dependencies:
+### 3. Install Composer dependencies
 
 ```bash
 composer install
 ```
 
-4. Import the database:
+### 4. Import the database
+
+Import
 
 ```
 filipino_cookbook_api.sql
 ```
 
-into your MySQL database.
+into your MySQL server.
 
-5. Configure your database connection if necessary.
+### 5. Create the configuration file
 
-6. Start Apache and MySQL using XAMPP.
+Copy
 
-7. Access the API:
+```
+config.example.php
+```
+
+Rename it to
+
+```
+config.php
+```
+
+Update the values:
+
+```php
+<?php
+
+$dbHost = "localhost";
+$dbName = "filipino_cookbook_api";
+$dbUser = "root";
+$dbPass = "";
+```
+
+### 6. Start XAMPP
+
+Start:
+
+- Apache
+- MySQL
+
+### 7. Access the API
 
 ```
 http://localhost/filipino-cookbook-api/public
@@ -80,67 +155,162 @@ http://localhost/filipino-cookbook-api/public
 
 ---
 
-## API Endpoints
+# Configuration Instructions
+
+Example configuration:
+
+```php
+$dbHost = "localhost";
+$dbName = "filipino_cookbook_api";
+$dbUser = "YOUR_DATABASE_USERNAME";
+$dbPass = "YOUR_DATABASE_PASSWORD";
+```
+
+The actual `config.php` should **not** be uploaded.
+
+Only upload:
+
+```
+config.example.php
+```
+
+---
+
+# Security
+
+The API uses:
+
+- Bearer Token Authentication
+- Input Validation
+- Prepared Statements (PDO)
+
+---
+
+# API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/foods` | Retrieve all Filipino foods |
-| GET | `/api/categories` | Retrieve all food categories |
-| GET | `/api/origins` | Retrieve all food origins |
+|---------|----------|-------------|
+| GET | `/api/foods` | Retrieve all foods |
+| GET | `/api/foods/{id}` | Retrieve a food by ID |
+| GET | `/api/foods/search/{name}` | Search foods |
+| GET | `/api/categories` | Retrieve all categories |
 | GET | `/api/ingredients` | Retrieve all ingredients |
+| POST | `/api/foods` | Add a new food |
 
 ---
 
-## Project Structure
+# Optional API Enhancements
+
+## Description of the Enhancement
+
+The API has been enhanced by adding two new endpoints and implementing input validation to improve both usability and security.
+
+## Purpose of the Enhancement
+
+- Display the number of foods available in each category.
+- Return a randomly selected Filipino food.
+- Validate user input before processing requests.
+
+## Files Modified
+
+- `public/index.php`
+- `README.md`
+
+## Endpoints Added
+
+### GET `/api/categories/summary`
+
+Returns the number of foods under each category.
+
+### GET `/api/foods/random`
+
+Returns one randomly selected Filipino food.
+
+## Security Features Implemented
+
+Input Validation
+
+The API validates:
+
+- Required request fields
+- Numeric IDs
+- Empty input values
+
+This prevents invalid requests from being processed.
+
+## Instructions for Testing the Enhancement
+
+1. Start Apache and MySQL.
+2. Run:
+
+```bash
+composer install
+```
+
+3. Import the SQL database.
+4. Configure `config.php`.
+5. Open Thunder Client or Postman.
+6. Add the Authorization header:
 
 ```
-filipino-cookbook-api-devillena/
-│── public/
-│   ├── index.php
-│   └── .htaccess
-│── composer.json
-│── composer.lock
-│── filipino_cookbook_api.sql
-│── README.md
-│── .gitignore
+Authorization: Bearer dmmmsu-cookbook-token-2026
 ```
+
+7. Test:
+
+```
+GET /api/categories/summary
+```
+
+8. Test:
+
+```
+GET /api/foods/random
+```
+
+9. Test the input validation by submitting invalid data to:
+
+```
+POST /api/foods
+```
+
+The API should return an appropriate error message.
 
 ---
 
-## Optional API Enhancements
+# Screenshots of Successful Endpoint Testing
 
-### Description
-This enhancement adds two new API endpoints for easier exploration of the dataset and improves request safety through input validation for new and existing routes.
+Include screenshots showing:
 
-### Purpose
-- Provide quick insights into category distribution and random food discovery.
-- Prevent malformed or unsafe requests from being processed by the API.
+- GET `/api/foods`
+- GET `/api/foods/{id}`
+- GET `/api/foods/search/{name}`
+- GET `/api/categories`
+- GET `/api/ingredients`
+- POST `/api/foods`
+- GET `/api/categories/summary`
+- GET `/api/foods/random`
+- Input validation error
+- Unauthorized access (optional)
 
-### Files modified
-- public/index.php
-- README.md
+---
 
-### Endpoints added
-- GET /api/categories/summary
-- GET /api/foods/random
+# Repository Verification Checklist
 
-### Security features implemented
-- Validation for food_name, category_id, origin_id, instructions, and ingredient_ids on POST /api/foods.
-- Validation for numeric ID values on GET /api/foods/{id}.
-- Validation for search text on GET /api/foods/search/{name}.
+After cloning the repository:
 
-### Instructions for testing the enhancement
-1. Start Apache and MySQL in XAMPP.
-2. Open the API in your browser or use curl.
-3. Test the category summary endpoint:
-   curl -i -H "Authorization: Bearer dmmmsu-cookbook-token-2026" http://localhost/filipino-cookbook-api/public/api/categories/summary
-4. Test the random food endpoint:
-   curl -i -H "Authorization: Bearer dmmmsu-cookbook-token-2026" http://localhost/filipino-cookbook-api/public/api/foods/random
-5. Test input validation by sending invalid data to POST /api/foods.
+- Clone or download the repository
+- Run `composer install`
+- Import the SQL database
+- Configure `config.php`
+- Start Apache and MySQL
+- Run the API
+- Test all endpoints
+- Verify JSON responses
+- Confirm no sensitive information is uploaded
+- Verify installation instructions are complete
 
-### Screenshots of successful testing
-- Category summary endpoint: [docs/images/categories-summary.svg](docs/images/categories-summary.svg)
-- Random food endpoint: [docs/images/random-food.svg](docs/images/random-food.svg)
+---
 
 ## Author
 
@@ -154,4 +324,4 @@ Don Mariano Marcos Memorial State University
 
 ## License
 
-This project is created for educational purposes.
+This project was developed for educational purposes as part of the API Development laboratory activities.

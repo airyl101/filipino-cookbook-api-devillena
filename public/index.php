@@ -3,8 +3,8 @@
 // Load the required files from Composer
 require __DIR__ . '/../vendor/autoload.php';
 
-// Load configuration
-$config = require __DIR__ . '/../config.php';
+// Load the database configuration file
+require __DIR__ . '/../config.php';
 
 // Import the classes needed for Slim
 use Slim\Factory\AppFactory;
@@ -36,9 +36,9 @@ try {
 
     // Connect to the MySQL database
     $pdo = new PDO(
-    "mysql:host={$config['db']['host']};dbname={$config['db']['database']};charset={$config['db']['charset']}",
-    $config['db']['username'],
-    $config['db']['password']
+    "mysql:host=$dbHost;dbname=$dbName;charset=utf8",
+    $dbUser,
+    $dbPass
     );
 
     // Show database errors if there are problems
@@ -56,55 +56,12 @@ try {
 // ==============================
 
 // Token used to protect the API routes
-$TOKEN = $config['api_token'];
+$TOKEN = "dmmmsu-cookbook-token-2026";
 
 
 // ==============================
 // AUTHENTICATION MIDDLEWARE
 // ==============================
-
-$buildJsonResponse = function (Response $response, $payload, int $status = 200): Response {
-    $response->getBody()->write(json_encode($payload));
-
-    return $response
-        ->withStatus($status)
-        ->withHeader('Content-Type', 'application/json');
-};
-
-$validatePositiveInteger = function ($value, string $fieldName) {
-    if (!is_numeric($value) || (int)$value <= 0 || (string)(int)$value !== (string)$value) {
-        return "$fieldName must be a positive integer.";
-    }
-
-    return null;
-};
-
-$validateRequiredString = function ($value, string $fieldName, int $maxLength = 255) {
-    if (!is_string($value) || trim($value) === '') {
-        return "$fieldName is required.";
-    }
-
-    $trimmed = trim($value);
-    if (mb_strlen($trimmed) > $maxLength) {
-        return "$fieldName must be at most $maxLength characters.";
-    }
-
-    return null;
-};
-
-$validateIngredientIds = function ($value) {
-    if (!is_array($value) || count($value) === 0) {
-        return 'ingredient_ids must be a non-empty array.';
-    }
-
-    foreach ($value as $ingredientId) {
-        if (!is_numeric($ingredientId) || (int)$ingredientId <= 0) {
-            return 'ingredient_ids must contain only positive integers.';
-        }
-    }
-
-    return null;
-};
 
 // Checks if the user has the correct API token
 $authMiddleware = function (Request $request, $handler) use ($TOKEN) {
@@ -209,6 +166,56 @@ $app->get('/api/foods', function (Request $request, Response $response) use ($pd
 
 })->add($authMiddleware);
 
+// ======================================================
+// NEW API ENDPOINT #2
+// Get a Randomly Selected Filipino Food
+// ======================================================
+
+$app->get('/api/foods/random', function (Request $request, Response $response) use ($pdo) {
+
+    $sql = "
+        SELECT
+            f.food_id,
+            f.food_name,
+            c.category_name,
+            o.origin_name,
+            f.instructions
+        FROM foods f
+        JOIN categories c
+            ON f.category_id = c.category_id
+        JOIN origins o
+            ON f.origin_id = o.origin_id
+        ORDER BY RAND()
+        LIMIT 1
+    ";
+
+    $stmt = $pdo->query($sql);
+
+    $food = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($food) {
+
+        $ingredientSQL = "
+            SELECT i.ingredient_name
+            FROM food_ingredients fi
+            JOIN ingredients i
+                ON fi.ingredient_id = i.ingredient_id
+            WHERE fi.food_id = ?
+        ";
+
+        $ingredientStmt = $pdo->prepare($ingredientSQL);
+
+        $ingredientStmt->execute([$food['food_id']]);
+
+        $food['ingredients'] =
+            $ingredientStmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    $response->getBody()->write(json_encode($food));
+
+    return $response->withHeader('Content-Type','application/json');
+
+})->add($authMiddleware);
 
 // ==============================
 // SEARCH FOOD BY NAME
@@ -216,18 +223,28 @@ $app->get('/api/foods', function (Request $request, Response $response) use ($pd
 
 // Search foods using the food name
 // Requires a valid API token
-$app->get('/api/foods/search/{name}', function (Request $request, Response $response, $args) use ($pdo, $buildJsonResponse, $validateRequiredString) {
+$app->get('/api/foods/search/{name}', function (Request $request, Response $response, $args) use ($pdo) {
 
     // Get the search keyword from the URL
     $name = $args['name'];
-    $nameError = $validateRequiredString($name, 'name', 100);
 
-    if ($nameError) {
-        return $buildJsonResponse($response, [
-            "status" => "error",
-            "message" => $nameError
-        ], 400);
-    }
+    // ======================================================
+// PART 1 ENHANCEMENT - SECURITY FEATURE
+// Input Validation
+// ======================================================
+
+// Check if the search text is empty
+if (trim($name) === '') {
+
+    $response->getBody()->write(json_encode([
+        "status" => "error",
+        "message" => "Search keyword cannot be empty."
+    ]));
+
+    return $response
+        ->withStatus(400)
+        ->withHeader('Content-Type', 'application/json');
+}
 
     // Find foods that contain the given keyword
     $sql = "
@@ -275,9 +292,12 @@ $app->get('/api/foods/search/{name}', function (Request $request, Response $resp
 
 
     // Return the matching foods
-    return $buildJsonResponse($response, $foods);
+    $response->getBody()->write(json_encode($foods));
+
+    return $response->withHeader('Content-Type', 'application/json');
 
 })->add($authMiddleware);
+
 
 // ==============================
 // GET FOOD BY ID
@@ -285,60 +305,10 @@ $app->get('/api/foods/search/{name}', function (Request $request, Response $resp
 
 // Get a specific food using its ID
 // Requires a valid API token
-$app->get('/api/foods/random', function (Request $request, Response $response) use ($pdo, $buildJsonResponse) {
-
-    $sql = "
-        SELECT
-            f.food_id,
-            f.food_name,
-            c.category_name,
-            o.origin_name,
-            f.instructions
-        FROM foods f
-        JOIN categories c ON f.category_id = c.category_id
-        JOIN origins o ON f.origin_id = o.origin_id
-        ORDER BY RAND()
-        LIMIT 1
-    ";
-
-    $stmt = $pdo->query($sql);
-    $food = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$food) {
-        return $buildJsonResponse($response, [
-            "status" => "error",
-            "message" => "No food found"
-        ], 404);
-    }
-
-    $ingredientSQL = "
-        SELECT i.ingredient_name
-        FROM food_ingredients fi
-        JOIN ingredients i
-            ON fi.ingredient_id = i.ingredient_id
-        WHERE fi.food_id = ?
-    ";
-
-    $ingredientStmt = $pdo->prepare($ingredientSQL);
-    $ingredientStmt->execute([$food['food_id']]);
-    $food['ingredients'] = $ingredientStmt->fetchAll(PDO::FETCH_COLUMN);
-
-    return $buildJsonResponse($response, $food);
-
-})->add($authMiddleware);
-
-$app->get('/api/foods/{id}', function (Request $request, Response $response, $args) use ($pdo, $buildJsonResponse, $validatePositiveInteger) {
+$app->get('/api/foods/{id:[0-9]+}', function (Request $request, Response $response, $args) use ($pdo) {
 
     // Get the food ID from the URL
     $id = $args['id'];
-    $idError = $validatePositiveInteger($id, 'id');
-
-    if ($idError) {
-        return $buildJsonResponse($response, [
-            "status" => "error",
-            "message" => $idError
-        ], 400);
-    }
 
     // Find the food with its category and origin
     $sql = "
@@ -365,10 +335,14 @@ $app->get('/api/foods/{id}', function (Request $request, Response $response, $ar
     // Check if the food exists
     if (!$food) {
 
-        return $buildJsonResponse($response, [
+        $response->getBody()->write(json_encode([
             "status" => "error",
             "message" => "Food not found"
-        ], 404);
+        ]));
+
+        return $response
+            ->withStatus(404)
+            ->withHeader('Content-Type', 'application/json');
     }
 
 
@@ -391,10 +365,11 @@ $app->get('/api/foods/{id}', function (Request $request, Response $response, $ar
 
 
     // Return the food information as JSON
-    return $buildJsonResponse($response, $food);
+    $response->getBody()->write(json_encode($food));
+
+    return $response->withHeader('Content-Type', 'application/json');
 
 })->add($authMiddleware);
-
 
 // ==============================
 // GET ALL INGREDIENTS
@@ -420,36 +395,12 @@ $app->get('/api/ingredients', function (Request $request, Response $response) us
 
 
 // ==============================
-// GET CATEGORY SUMMARY
-// ==============================
-
-$app->get('/api/categories/summary', function (Request $request, Response $response) use ($pdo, $buildJsonResponse) {
-
-    $sql = "
-        SELECT
-            c.category_id,
-            c.category_name,
-            COUNT(f.food_id) AS food_count
-        FROM categories c
-        LEFT JOIN foods f ON f.category_id = c.category_id
-        GROUP BY c.category_id, c.category_name
-        ORDER BY c.category_name
-    ";
-
-    $stmt = $pdo->query($sql);
-    $summary = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    return $buildJsonResponse($response, $summary);
-
-})->add($authMiddleware);
-
-// ==============================
 // GET ALL CATEGORIES
 // ==============================
 
 // Get all food categories from the database
 // Requires a valid API token
-$app->get('/api/categories', function (Request $request, Response $response) use ($pdo, $buildJsonResponse) {
+$app->get('/api/categories', function (Request $request, Response $response) use ($pdo) {
 
     // Get all records from the categories table
     $stmt = $pdo->query("SELECT * FROM categories");
@@ -460,7 +411,38 @@ $app->get('/api/categories', function (Request $request, Response $response) use
 
 
     // Return categories as JSON
-    return $buildJsonResponse($response, $categories);
+    $response->getBody()->write(json_encode($categories));
+
+
+    return $response->withHeader('Content-Type', 'application/json');
+
+})->add($authMiddleware);
+
+// ======================================================
+// NEW API ENDPOINT #1
+// Get the Number of Foods Under Each Category
+// ======================================================
+
+$app->get('/api/categories/summary', function (Request $request, Response $response) use ($pdo) {
+
+    $sql = "
+        SELECT
+            c.category_name,
+            COUNT(f.food_id) AS total_foods
+        FROM categories c
+        LEFT JOIN foods f
+            ON c.category_id = f.category_id
+        GROUP BY c.category_id
+        ORDER BY c.category_name
+    ";
+
+    $stmt = $pdo->query($sql);
+
+    $summary = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $response->getBody()->write(json_encode($summary));
+
+    return $response->withHeader('Content-Type','application/json');
 
 })->add($authMiddleware);
 
@@ -471,58 +453,48 @@ $app->get('/api/categories', function (Request $request, Response $response) use
 
 // Add a new food together with its ingredients
 // Requires a valid API token
-$app->post('/api/foods', function (Request $request, Response $response) use ($pdo, $buildJsonResponse, $validateRequiredString, $validatePositiveInteger, $validateIngredientIds) {
+$app->post('/api/foods', function (Request $request, Response $response) use ($pdo) {
 
 
     // Get the data sent from the client
     $data = $request->getParsedBody();
 
-    if (!is_array($data)) {
-        $body = $request->getBody();
-        $body->rewind();
-        $rawBody = $body->getContents();
-        $decodedBody = json_decode($rawBody, true);
 
-        if (is_array($decodedBody)) {
-            $data = $decodedBody;
-        } else {
-            $data = [];
-        }
-    }
+    // ======================================================
+    // PART 1 ENHANCEMENT - SECURITY FEATURE
+    // Input Validation
+    // ======================================================
 
-    if (!is_array($data)) {
-        $data = [];
-    }
+    if (
 
-    $errors = [];
-    $foodNameError = $validateRequiredString($data['food_name'] ?? null, 'food_name', 100);
-    $categoryError = $validatePositiveInteger($data['category_id'] ?? null, 'category_id');
-    $originError = $validatePositiveInteger($data['origin_id'] ?? null, 'origin_id');
-    $instructionsError = $validateRequiredString($data['instructions'] ?? null, 'instructions', 1000);
-    $ingredientError = $validateIngredientIds($data['ingredient_ids'] ?? null);
+        !isset($data['food_name']) ||
+        trim($data['food_name']) === '' ||
 
-    if ($foodNameError) {
-        $errors[] = $foodNameError;
-    }
-    if ($categoryError) {
-        $errors[] = $categoryError;
-    }
-    if ($originError) {
-        $errors[] = $originError;
-    }
-    if ($instructionsError) {
-        $errors[] = $instructionsError;
-    }
-    if ($ingredientError) {
-        $errors[] = $ingredientError;
-    }
+        !isset($data['category_id']) ||
+        !is_numeric($data['category_id']) ||
 
-    if (!empty($errors)) {
-        return $buildJsonResponse($response, [
+        !isset($data['origin_id']) ||
+        !is_numeric($data['origin_id']) ||
+
+        !isset($data['instructions']) ||
+        trim($data['instructions']) === '' ||
+
+        !isset($data['ingredient_ids']) ||
+        !is_array($data['ingredient_ids']) ||
+        count($data['ingredient_ids']) == 0
+
+    ) {
+
+        // Return an error if some information is missing
+        $response->getBody()->write(json_encode([
             "status" => "error",
-            "message" => "Validation failed.",
-            "errors" => $errors
-        ], 400);
+            "message" => "Missing required fields."
+        ]));
+
+
+        return $response
+            ->withStatus(400)
+            ->withHeader('Content-Type', 'application/json');
     }
 
 
@@ -566,10 +538,16 @@ $app->post('/api/foods', function (Request $request, Response $response) use ($p
     }
 
     // Send a success response after adding the food
-    return $buildJsonResponse($response, [
+    $response->getBody()->write(json_encode([
         "status" => "success",
         "message" => "Food added successfully."
-    ], 201);
+    ]));
+
+
+    // Return status 201 because a new record was created
+    return $response
+        ->withStatus(201)
+        ->withHeader('Content-Type', 'application/json');
 
 })->add($authMiddleware);
 
