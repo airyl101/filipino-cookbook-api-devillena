@@ -194,6 +194,7 @@ The API uses:
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
+| GET | `/` | Display the API welcome message |
 | GET | `/api/foods` | Retrieve all Filipino foods |
 | GET | `/api/foods/{id}` | Retrieve a specific Filipino food by ID |
 | GET | `/api/foods/search/{name}` | Search Filipino foods by name |
@@ -237,16 +238,19 @@ The Filipino Cookbook API is a RESTful API developed using PHP, Slim Framework, 
 
 ### Main Functions
 
+- Display the API welcome message
 - Retrieve all Filipino foods
 - Retrieve food details by ID
 - Search foods by name
 - Retrieve food categories
 - Retrieve ingredients
 - Add new food records
+- Display the number of foods under each category
+- Retrieve a randomly selected Filipino food
 - Authenticate API requests
 - Return JSON responses
 
----
+-----
 
 ## Database Setup
 
@@ -323,6 +327,29 @@ If the token is missing or invalid, the API returns:
 
 ## Endpoint Documentation
 
+### GET /
+
+**Description**
+
+Displays the welcome message of the Filipino Cookbook API and confirms that the API is running.
+
+**Example Request**
+
+```
+GET http://localhost/filipino-cookbook-api/public/
+```
+
+**Example Successful Response**
+
+```json
+{
+    "message": "Welcome to the Secured Filipino Cookbook API",
+    "note": "Use a valid Bearer token to access /api endpoints."
+}
+```
+
+---
+
 ### GET /api/foods
 
 **Description**
@@ -353,15 +380,6 @@ GET http://localhost/filipino-cookbook-api/public/api/foods
         "origin_name": "Luzon"
     }
 ]
-```
-
-**Example Error Response**
-
-```json
-{
-    "status": "error",
-    "message": "Unauthorized access. Valid API token is required."
-}
 ```
 
 ---
@@ -443,13 +461,35 @@ Content-Type: application/json
 
 Returns the number of foods under each category.
 
+**Example Request**
+
+```
+GET /api/categories/summary
+```
+
 ---
 
 ### GET /api/foods/random
 
 Returns one randomly selected Filipino food.
 
+**Example Request**
+
+```
+GET /api/foods/random
+```
+
 ---
+
+**Example Error Response**
+
+```json
+{
+    "status": "error",
+    "message": "Unauthorized access. Valid API token is required."
+}
+```
+----
 
 ## HTTP Status Codes
 
@@ -533,6 +573,7 @@ The API should return an appropriate error message.
 
 Include screenshots showing:
 
+- GET `/`
 - GET `/api/foods`
 - GET `/api/foods/{id}`
 - GET `/api/foods/search/{name}`
