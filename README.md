@@ -72,7 +72,6 @@ filipino-cookbook-api-devillena/
 │── public/
 │   ├── index.php
 │   └── .htaccess
-│── vendor/
 │── composer.json
 │── composer.lock
 │── filipino_cookbook_api.sql
