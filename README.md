@@ -42,7 +42,10 @@ A RESTful Filipino Cookbook API developed using PHP, Slim Framework, and MySQL f
 - Slim Framework
 - MySQL
 - Composer
+- JSON
+- Apache
 - XAMPP
+- Thunder Client
 - Git
 - GitHub
 
@@ -159,6 +162,8 @@ http://localhost/filipino-cookbook-api/public
 Example configuration:
 
 ```php
+<?php
+
 $dbHost = "localhost";
 $dbName = "filipino_cookbook_api";
 $dbUser = "YOUR_DATABASE_USERNAME";
@@ -189,12 +194,275 @@ The API uses:
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | `/api/foods` | Retrieve all foods |
-| GET | `/api/foods/{id}` | Retrieve a food by ID |
-| GET | `/api/foods/search/{name}` | Search foods |
-| GET | `/api/categories` | Retrieve all categories |
+| GET | `/api/foods` | Retrieve all Filipino foods |
+| GET | `/api/foods/{id}` | Retrieve a specific Filipino food by ID |
+| GET | `/api/foods/search/{name}` | Search Filipino foods by name |
+| GET | `/api/categories` | Retrieve all food categories |
 | GET | `/api/ingredients` | Retrieve all ingredients |
-| POST | `/api/foods` | Add a new food |
+| POST | `/api/foods` | Add a new Filipino food |
+| GET | `/api/categories/summary` | Retrieve the number of foods under each category |
+| GET | `/api/foods/random` | Retrieve a randomly selected Filipino food |
+
+---
+
+# API Documentation
+
+## API Title
+
+**Filipino Cookbook API**
+
+---
+
+## API Description
+
+The Filipino Cookbook API is a RESTful API developed using PHP, Slim Framework, and MySQL. It provides JSON-formatted information about Filipino foods, categories, ingredients, and food origins. The API is intended for students and developers who want to learn RESTful API development and integrate cookbook data into their own applications.
+
+### Purpose of the API
+
+- Provide Filipino cookbook information through RESTful API endpoints.
+- Demonstrate RESTful API development using PHP and Slim Framework.
+
+### Type of Information Provided
+
+- Filipino foods
+- Food categories
+- Food origins
+- Food ingredients
+
+### Intended Users
+
+- Students
+- Developers
+- API consumers
+
+### Main Functions
+
+- Retrieve all Filipino foods
+- Retrieve food details by ID
+- Search foods by name
+- Retrieve food categories
+- Retrieve ingredients
+- Add new food records
+- Authenticate API requests
+- Return JSON responses
+
+---
+
+## Database Setup
+
+### Database Name
+
+```
+filipino_cookbook_api
+```
+
+### SQL File
+
+```
+filipino_cookbook_api.sql
+```
+
+### Tables
+
+- foods
+- categories
+- origins
+- ingredients
+- food_ingredients
+
+### Table Relationships
+
+```
+categories --> foods <-- origins
+                  |
+                  |
+          food_ingredients
+                  |
+                  |
+            ingredients
+```
+
+Import the SQL file into MySQL before running the API.
+
+---
+
+## Base URL
+
+```
+http://localhost/filipino-cookbook-api/public/api
+```
+
+---
+
+## Authentication Instructions
+
+This API uses **Bearer Token Authentication**.
+
+### Required Header
+
+```
+Authorization: Bearer dmmmsu-cookbook-token-2026
+```
+
+### Accept Header
+
+```
+Accept: application/json
+```
+
+If the token is missing or invalid, the API returns:
+
+```json
+{
+    "status": "error",
+    "message": "Unauthorized access. Valid API token is required."
+}
+```
+
+---
+
+## Endpoint Documentation
+
+### GET /api/foods
+
+**Description**
+
+Returns all Filipino foods stored in the database.
+
+**Required Headers**
+
+```
+Authorization: Bearer dmmmsu-cookbook-token-2026
+Accept: application/json
+```
+
+**Example Request**
+
+```
+GET http://localhost/filipino-cookbook-api/public/api/foods
+```
+
+**Example Successful Response**
+
+```json
+[
+    {
+        "food_id": 1,
+        "food_name": "Adobo",
+        "category_name": "Main Dish",
+        "origin_name": "Luzon"
+    }
+]
+```
+
+**Example Error Response**
+
+```json
+{
+    "status": "error",
+    "message": "Unauthorized access. Valid API token is required."
+}
+```
+
+---
+
+### GET /api/foods/{id}
+
+Returns the details of a specific Filipino food.
+
+**Example Request**
+
+```
+GET /api/foods/1
+```
+
+---
+
+### GET /api/foods/search/{name}
+
+Searches Filipino foods by name.
+
+**Example Request**
+
+```
+GET /api/foods/search/adobo
+```
+
+---
+
+### GET /api/categories
+
+Returns all food categories.
+
+**Example Request**
+
+```
+GET /api/categories
+```
+
+---
+
+### GET /api/ingredients
+
+Returns all ingredients.
+
+**Example Request**
+
+```
+GET /api/ingredients
+```
+
+---
+
+### POST /api/foods
+
+Adds a new Filipino food.
+
+**Required Headers**
+
+```
+Authorization: Bearer dmmmsu-cookbook-token-2026
+Content-Type: application/json
+```
+
+**Example Request Body**
+
+```json
+{
+    "food_name": "Sample Food",
+    "category_id": 1,
+    "origin_id": 1,
+    "instructions": "Cook the ingredients.",
+    "ingredient_ids": [1,2,3]
+}
+```
+
+---
+
+### GET /api/categories/summary
+
+Returns the number of foods under each category.
+
+---
+
+### GET /api/foods/random
+
+Returns one randomly selected Filipino food.
+
+---
+
+## HTTP Status Codes
+
+| Status Code | Meaning |
+|-------------|---------|
+| 200 | Request completed successfully |
+| 201 | Resource created successfully |
+| 400 | Invalid request or parameter |
+| 401 | Missing or invalid authentication |
+| 403 | Access is not allowed |
+| 404 | Requested resource was not found |
+| 429 | Too many requests |
+| 500 | Internal server error |
 
 ---
 
@@ -217,35 +485,19 @@ The API has been enhanced by adding two new endpoints and implementing input val
 
 ## Endpoints Added
 
-### GET `/api/categories/summary`
-
-Returns the number of foods under each category.
-
-### GET `/api/foods/random`
-
-Returns one randomly selected Filipino food.
+- GET `/api/categories/summary`
+- GET `/api/foods/random`
 
 ## Security Features Implemented
 
-Input Validation
-
-The API validates:
-
-- Required request fields
-- Numeric IDs
-- Empty input values
-
-This prevents invalid requests from being processed.
+- Input validation for required fields
+- Validation for numeric IDs
+- Validation for empty input values
 
 ## Instructions for Testing the Enhancement
 
 1. Start Apache and MySQL.
-2. Run:
-
-```bash
-composer install
-```
-
+2. Run `composer install`.
 3. Import the SQL database.
 4. Configure `config.php`.
 5. Open Thunder Client or Postman.
@@ -277,7 +529,7 @@ The API should return an appropriate error message.
 
 ---
 
-# Screenshots of Successful Endpoint Testing
+# Testing Evidence
 
 Include screenshots showing:
 
@@ -289,8 +541,10 @@ Include screenshots showing:
 - POST `/api/foods`
 - GET `/api/categories/summary`
 - GET `/api/foods/random`
-- Input validation error
-- Unauthorized access (optional)
+- Input validation error (400 Bad Request)
+- Unauthorized access (401 Unauthorized)
+
+Add a short caption below each screenshot describing the result.
 
 ---
 
@@ -306,18 +560,25 @@ After cloning the repository:
 - Run the API
 - Test all endpoints
 - Verify JSON responses
-- Confirm no sensitive information is uploaded
+- Confirm no sensitive information was uploaded
 - Verify installation instructions are complete
+- Confirm another student can install and use the API
 
 ---
 
-## Author
+## Developer Information
 
-**Airyl Rhyn R. Devillena**
+**Student Name:** Airyl Rhyn R. Devillena
 
-Bachelor of Science in Information Technology
+**Course:** Bachelor of Science in Information Technology
 
-Don Mariano Marcos Memorial State University
+**University:** Don Mariano Marcos Memorial State University
+
+**GitHub Username:** airyl101
+
+**Repository:** https://github.com/airyl101/filipino-cookbook-api-devillena
+
+**Date Completed:** July 31, 2026
 
 ---
 
