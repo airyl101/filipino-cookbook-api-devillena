@@ -371,16 +371,7 @@ GET http://localhost/filipino-cookbook-api/public/api/foods
 
 **Example Successful Response**
 
-```json
-[
-    {
-        "food_id": 1,
-        "food_name": "Adobo",
-        "category_name": "Main Dish",
-        "origin_name": "Luzon"
-    }
-]
-```
+<img width="958" height="415" alt="get-foods" src="https://github.com/user-attachments/assets/fc7a9f4f-d36f-4a44-95b4-3745cafaa2ed" />
 
 ---
 
