@@ -385,6 +385,9 @@ Returns the details of a specific Filipino food.
 GET /api/foods/1
 ```
 
+**Example Successful Response**
+<img width="997" height="348" alt="get-food-by-id" src="https://github.com/user-attachments/assets/db65cc1c-728a-491f-a21a-ddb0b2f20387" />
+
 ---
 
 ### GET /api/foods/search/{name}
@@ -396,6 +399,9 @@ Searches Filipino foods by name.
 ```
 GET /api/foods/search/adobo
 ```
+
+**Example Successful Response**
+<img width="995" height="400" alt="get-food-by-name" src="https://github.com/user-attachments/assets/19740bbc-1bcd-401a-9683-e50c7e160c0e" />
 
 ---
 
@@ -409,6 +415,9 @@ Returns all food categories.
 GET /api/categories
 ```
 
+**Example Successful Response**
+<img width="700" height="348" alt="categories" src="https://github.com/user-attachments/assets/d80ecf72-d5fa-4775-b20a-df7672ed7ab0" />
+
 ---
 
 ### GET /api/ingredients
@@ -420,6 +429,9 @@ Returns all ingredients.
 ```
 GET /api/ingredients
 ```
+
+**Example Successful Response**
+<img width="766" height="397" alt="ingredients" src="https://github.com/user-attachments/assets/e766bf47-6e45-4198-9c96-6a2003b349e9" />
 
 ---
 
@@ -434,7 +446,7 @@ Authorization: Bearer dmmmsu-cookbook-token-2026
 Content-Type: application/json
 ```
 
-**Example Request Body**
+**Example Request**
 
 ```json
 {
@@ -445,6 +457,8 @@ Content-Type: application/json
     "ingredient_ids": [1,2,3]
 }
 ```
+**Example Successful Response**
+<img width="897" height="832" alt="add-food-success" src="https://github.com/user-attachments/assets/e83bd464-613c-4953-a58e-eec6f88a584d" />
 
 ---
 
@@ -458,6 +472,9 @@ Returns the number of foods under each category.
 GET /api/categories/summary
 ```
 
+**Example Successful Response**
+<img width="927" height="412" alt="category-summary" src="https://github.com/user-attachments/assets/fe8757f6-97f1-485d-80e8-4a9a4a74e168" />
+
 ---
 
 ### GET /api/foods/random
@@ -469,6 +486,9 @@ Returns one randomly selected Filipino food.
 ```
 GET /api/foods/random
 ```
+
+**Example Successful Response**
+<img width="1063" height="406" alt="random-food" src="https://github.com/user-attachments/assets/a0f444ce-6023-4d41-901e-45ab8c4283c8" />
 
 ---
 
@@ -565,16 +585,55 @@ The API should return an appropriate error message.
 Include screenshots showing:
 
 - GET `/`
+   <img width="777" height="227" alt="public-welcome" src="https://github.com/user-attachments/assets/33892575-2c90-4e87-8077-2bf0a6fd389f" />
+----
+
 - GET `/api/foods`
+    <img width="958" height="415" alt="get-foods" src="https://github.com/user-attachments/assets/52db657e-f251-4685-bad0-2f3c5f238c40" />
+----
+
 - GET `/api/foods/{id}`
+    <img width="997" height="348" alt="get-food-by-id" src="https://github.com/user-attachments/assets/dbdf8123-635a-4f1f-8f18-ed812a0746f1" />
+----
+
 - GET `/api/foods/search/{name}`
+    <img width="995" height="400" alt="get-food-by-name" src="https://github.com/user-attachments/assets/2f70fced-cfd7-4d64-8674-8e5c99bff0b4" />
+----
+
 - GET `/api/categories`
+    <img width="700" height="348" alt="categories" src="https://github.com/user-attachments/assets/0fadb630-8959-404e-a76e-16da99be1226" />
+
+----
+
 - GET `/api/ingredients`
+    <img width="766" height="397" alt="ingredients" src="https://github.com/user-attachments/assets/01b644d5-c4de-4f51-88d6-d8f578938180" />
+
+----
+
 - POST `/api/foods`
+    <img width="897" height="832" alt="add-food-success" src="https://github.com/user-attachments/assets/6daf90df-cb8c-4b68-8e5a-6fe453b7716e" />
+
+----
+
 - GET `/api/categories/summary`
+    <img width="927" height="412" alt="category-summary" src="https://github.com/user-attachments/assets/7b3d9578-67bc-42ab-81c3-d32e3b601406" />
+
+----
+
 - GET `/api/foods/random`
+    <img width="1063" height="406" alt="random-food" src="https://github.com/user-attachments/assets/4c2d03d7-8915-4e09-ac63-aef341f21a92" />
+
+----
+
 - Input validation error (400 Bad Request)
+    <img width="942" height="622" alt="validation-error" src="https://github.com/user-attachments/assets/9f4fc26e-a35b-42b6-98a5-a42a7ea1d273" />
+
+----
+
 - Unauthorized access (401 Unauthorized)
+    <img width="896" height="257" alt="unauthorized" src="https://github.com/user-attachments/assets/9826803c-4ea0-4b41-a76f-c5c25943beb5" />
+
+----
 
 Add a short caption below each screenshot describing the result.
 
