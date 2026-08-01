@@ -464,7 +464,6 @@ $app->post('/api/foods', function (Request $request, Response $response) use ($p
     // PART 1 ENHANCEMENT - SECURITY FEATURE
     // Input Validation
     // ======================================================
-
     if (
 
         !isset($data['food_name']) ||
