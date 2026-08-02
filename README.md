@@ -913,7 +913,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Verifies that the API is running successfully by returning a welcome message.
 
-<img width="777" height="227" alt="public-welcome" src="https://github.com/user-attachments/assets/33892575-2c90-4e87-8077-2bf0a6fd389f" />
+![Public Welcome](screenshots/public-welcome.png)
 
 ---
 
@@ -923,7 +923,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully retrieves all Filipino foods together with their categories, origins, cooking instructions, and ingredients.
 
-<img width="958" height="415" alt="get-foods" src="https://github.com/user-attachments/assets/52db657e-f251-4685-bad0-2f3c5f238c40" />
+![Retrieve All Foods](screenshots/get-foods.png)
 
 ---
 
@@ -933,7 +933,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully returns the complete details of a selected Filipino food using its unique ID.
 
-<img width="997" height="348" alt="get-food-by-id" src="https://github.com/user-attachments/assets/dbdf8123-635a-4f1f-8f18-ed812a0746f1" />
+![Retrieve Food by ID](screenshots/get-food-by-id.png)
 
 ---
 
@@ -943,7 +943,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully searches for Filipino foods whose names match the specified keyword.
 
-<img width="995" height="400" alt="get-food-by-name" src="https://github.com/user-attachments/assets/2f70fced-cfd7-4d64-8674-8e5c99bff0b4" />
+![Search Food by Name](screenshots/get-food-by-name.png)
 
 ---
 
@@ -953,7 +953,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully retrieves all available food categories stored in the database.
 
-<img width="700" height="348" alt="categories" src="https://github.com/user-attachments/assets/0fadb630-8959-404e-a76e-16da99be1226" />
+![Retrieve Categories](screenshots/categories.png)
 
 ---
 
@@ -963,7 +963,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully retrieves all ingredients available in the database.
 
-<img width="766" height="397" alt="ingredients" src="https://github.com/user-attachments/assets/01b644d5-c4de-4f51-88d6-d8f578938180" />
+![Retrieve Ingredients](screenshots/ingredients.png)
 
 ---
 
@@ -973,7 +973,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully inserts a new Filipino food record together with its corresponding ingredients.
 
-<img width="897" height="832" alt="add-food-success" src="https://github.com/user-attachments/assets/6daf90df-cb8c-4b68-8e5a-6fe453b7716e" />
+![Add New Food](screenshots/add-food-success.png)
 
 ---
 
@@ -983,7 +983,7 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully returns the total number of foods available under each food category.
 
-<img width="927" height="412" alt="category-summary" src="https://github.com/user-attachments/assets/7b3d9578-67bc-42ab-81c3-d32e3b601406" />
+![Category Summary](screenshots/category-summary.png)
 
 ---
 
@@ -993,29 +993,29 @@ The Filipino Cookbook API was tested using **Thunder Client** in Visual Studio C
 
 **Description:** Successfully returns one randomly selected Filipino food from the database.
 
-<img width="1063" height="406" alt="random-food" src="https://github.com/user-attachments/assets/4c2d03d7-8915-4e09-ac63-aef341f21a92" />
+![Random Filipino Food](screenshots/random-food.png)
 
 ---
 
 ## Security Testing
 
-### Input Validation
+### 10. Input Validation
 
-**Scenario:** Invalid request data was submitted while adding a new food.
+**Endpoint:** `POST /api/foods`
 
-**Expected Result:** The API correctly returned **HTTP 400 Bad Request** together with an appropriate validation error message.
+**Description:** Demonstrates that the API validates incoming requests and rejects invalid or incomplete input by returning a **400 Bad Request** response.
 
-<img width="942" height="622" alt="validation-error" src="https://github.com/user-attachments/assets/9f4fc26e-a35b-42b6-98a5-a42a7ea1d273" />
+![Input Validation Error](screenshots/validation-error.png)
 
 ---
 
-### Unauthorized Access
+### 11. Unauthorized Access
 
-**Scenario:** A protected endpoint was accessed without providing a valid Bearer Token.
+**Endpoint:** Protected API Endpoints
 
-**Expected Result:** The API correctly returned **HTTP 401 Unauthorized** to prevent unauthorized access.
+**Description:** Demonstrates that requests without a valid Bearer Token are rejected with a **401 Unauthorized** response.
 
-<img width="896" height="257" alt="unauthorized" src="https://github.com/user-attachments/assets/9826803c-4ea0-4b41-a76f-c5c25943beb5" />
+![Unauthorized Access](screenshots/unauthorized.png)
 
 ---
 
