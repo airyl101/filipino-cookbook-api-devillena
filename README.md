@@ -83,8 +83,6 @@ filipino-cookbook-api-devillena/
 │── .gitignore
 ```
 
-> **Note:** The `vendor` folder should not be uploaded to GitHub. Run `composer install` after cloning the repository.
-
 ---
 
 # Installation Guide
@@ -243,7 +241,7 @@ This API uses **Bearer Token Authentication**.
 ### Required Header
 
 ```
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 ```
 
 ### Accept Header
@@ -339,7 +337,7 @@ Returns all Filipino foods stored in the database together with their category, 
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -391,7 +389,7 @@ Returns the complete information of a specific Filipino food based on its ID.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -439,7 +437,7 @@ Searches for Filipino foods whose names match the specified keyword.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -498,7 +496,7 @@ Returns all food categories stored in the database.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -544,7 +542,7 @@ Returns all ingredients stored in the database.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -590,7 +588,7 @@ Adds a new Filipino food together with its ingredients.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Content-Type: application/json
 Accept: application/json
 ```
@@ -646,7 +644,7 @@ Returns the total number of foods available under each category.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -692,7 +690,7 @@ Returns one randomly selected Filipino food from the database.
 ### Required Headers
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 Accept: application/json
 ```
 
@@ -849,7 +847,7 @@ All protected endpoints require a valid Bearer Token.
 ### Required Header
 
 ```http
-Authorization: Bearer dmmmsu-cookbook-token-2026
+Authorization: Bearer "YOUR_API_TOKEN"
 ```
 
 ### Unauthorized Response
