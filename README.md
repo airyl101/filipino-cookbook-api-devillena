@@ -1049,9 +1049,3 @@ The following verification steps were completed to ensure that the project is fu
 | **Date Completed** | August 2026 |
 
 ---
-
-# License
-
-This project was developed for educational purposes as part of the **API Development Laboratory Activities** for the Bachelor of Science in Information Technology program.
-
-The Filipino Cookbook API is intended for learning, demonstration, and academic use only. Students and instructors are free to clone, install, modify, and use this project for educational purposes while giving appropriate credit to the original developer.
