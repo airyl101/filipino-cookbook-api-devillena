@@ -19,7 +19,7 @@ $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 
 // Set the base folder where the API is located
-$app->setBasePath('/filipino-cookbook-api/public');
+$app->setBasePath('/filipino-cookbook-api-devillena/public');
 
 // Enable the routing feature of Slim
 $app->addRoutingMiddleware();
