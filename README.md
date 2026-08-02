@@ -152,7 +152,7 @@ Start:
 ### 7. Access the API
 
 ```
-http://localhost/filipino-cookbook-api-devillena/public
+http://localhost/filipino-cookbook-api/public
 ```
 
 ---
