@@ -2,7 +2,9 @@
 
 ## Description
 
-The Filipino Cookbook API is a RESTful API developed using PHP, Slim Framework, and MySQL. It provides JSON data about Filipino foods, food categories, ingredients, and food origins. The API demonstrates RESTful web service development with token-based authentication and is intended for educational purposes.
+The Filipino Cookbook API is a RESTful web service developed using PHP Slim Framework and MySQL. It provides structured JSON responses containing Filipino food information including dishes, categories, ingredients, and origins.
+
+The project demonstrates API development concepts such as routing, database integration, authentication, validation, and secure data handling.
 
 ---
 
@@ -55,16 +57,12 @@ A RESTful Filipino Cookbook API developed using PHP, Slim Framework, and MySQL f
 
 This repository contains:
 
-- Complete Filipino Cookbook API source code
-- SQL database file (`filipino_cookbook_api.sql`)
-- `composer.json`
-- `composer.lock`
-- API routes
-- Database connection files
-- Authentication and security files
-- Configuration instructions
-- `.gitignore`
-- `README.md`
+- API source code
+- Database structure file
+- Composer dependencies
+- Configuration examples
+- API documentation
+- Testing screenshots
 
 ---
 
@@ -134,11 +132,12 @@ Update the values:
 ```php
 <?php
 
-$dbHost = "localhost";
-$dbName = "filipino_cookbook_api";
-$dbUser = "root";
-$dbPass = "";
+$dbHost = "YOUR_DATABASE_HOST";
+$dbName = "YOUR_DATABASE_NAME";
+$dbUser = "YOUR_DATABASE_USERNAME";
+$dbPass = "YOUR_DATABASE_PASSWORD";
 ```
+---- 
 
 ### 6. Start XAMPP
 
